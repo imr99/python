@@ -2,24 +2,41 @@ pipeline {
     agent any
     
     environment {
-        EC2_INSTANCE_IP = '52.3.250.81'
+        DOCKER_IMAGE_NAME = 'mypython'
+        DOCKER_HUB_CREDENTIALS = 'dockerhub_id'
+        DOCKER_HUB_REPO = 'imr99/mypython'  // The full Docker Hub repository name
     }
-
+    
     stages {
-        stage('Checkout') {
+        stage('Clone Git Repository') {
             steps {
-                checkout scm
+                git branch: 'main', url: 'https://github.com/imr99/python.git'
             }
         }
-
-        stage('Deploy to EC2') {
+        
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Copy application files to EC2
-                    sh "scp -i /home/dell/Downloads/react.pem -r ./home/dell/python ec2-user@${EC2_INSTANCE_IP}:/home/ec2-user"
-
-                    // SSH into EC2 and deploy the application
-                    sh "ssh -i /home/dell/Downloads/react.pem ec2-user@${EC2_INSTANCE_IP} 'cd /home/ec2-user && git pull && pip install -r requirements.txt && systemctl restart your-app-service'"
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} ."
+                }
+            }
+        }
+        
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: "${DOCKER_HUB_CREDENTIALS}", url: '') {
+                        sh "docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_HUB_REPO}:${BUILD_NUMBER}"
+                        sh "docker push ${DOCKER_HUB_REPO}:${BUILD_NUMBER}"
+                    }
+                }
+            }
+        }
+        stage('Docker Run') {
+            steps {
+                script {
+                    def dockerImage = docker.image("${DOCKER_HUB_REPO}:${BUILD_NUMBER}")
+                    dockerImage.run("-p 81:80 --rm --name mypythonappContainer")
                 }
             }
         }
