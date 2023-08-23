@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         
-        EC2_INSTANCE_IP = '52.3.250.81'
+        EC2-INSTANCE-IP = '52.3.250.81'
     }
 
     stages {
