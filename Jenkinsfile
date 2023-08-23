@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'mypython'
         DOCKER_HUB_CREDENTIALS = 'dockerhub_id'
-        DOCKER_HUB_REPO = 'imr99/mypython'  // The full Docker Hub repository name
+        DOCKER_HUB_REPO = 'imr99/mypython'  
         CONTAINER_NAME = 'mypythonappContainer'
     }
     
@@ -40,7 +40,7 @@ pipeline {
                     sh "docker stop ${CONTAINER_NAME} || true"
                     sh "docker rm ${CONTAINER_NAME} || true"
                     
-                    def dockerImage = docker.image("${DOCKER_HUB_REPO}:${BUILD_NUMBER}")
+                    //def dockerImage = docker.image("${DOCKER_HUB_REPO}:${BUILD_NUMBER}")
                     dockerImage.run("-p 81:80 --rm --name ${CONTAINER_NAME}")
                 }
             }
