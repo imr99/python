@@ -36,6 +36,8 @@ pipeline {
             steps {
                 script {
                     def dockerImage = docker.image("${DOCKER_HUB_REPO}:${BUILD_NUMBER}")
+                    sh 'docker stop $DOCKER_IMAGE_NAME || true'
+                    sh 'docker rm $DOCKER_IMAGE_NAME || tru
                     dockerImage.run("-p 81:80 --rm --name mypythonappContainer")
                 }
             }
