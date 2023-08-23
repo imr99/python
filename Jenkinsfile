@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         
-        EC2_INSTANCE_IP = 'your-ec2-instance-ip'
+        EC2_INSTANCE_IP = '52.3.250.81'
     }
 
     stages {
@@ -17,10 +17,10 @@ pipeline {
             steps {
                 script {
                     // Copy application files to EC2
-                    sh "scp -i /path/to/ssh/key.pem -r ./your-python-app ec2-user@${EC2_INSTANCE_IP}:/path/to/destination"
+                    sh "scp -i /home/dell/Downloads/react.pem -r ./home/dell/python ec2-user@${EC2_INSTANCE_IP}:/home/ec2-user
 
                     // SSH into EC2 and deploy the application
-                    sh "ssh -i /path/to/ssh/key.pem ec2-user@${EC2_INSTANCE_IP} 'cd /path/to/destination && git pull && pip install -r requirements.txt && systemctl restart your-app-service'"
+                    sh "ssh -i /home/dell/Downloads/react.pem ec2-user@${EC2_INSTANCE_IP} 'cd /home/ec2-user && git pull && pip install -r requirements.txt && systemctl restart your-app-service'"
                 }
             }
         }
