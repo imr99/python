@@ -5,6 +5,7 @@ pipeline {
         DOCKER_IMAGE_NAME = 'mypython'
         DOCKER_HUB_CREDENTIALS = 'dockerhub_id'
         DOCKER_HUB_REPO = 'imr99/mypython'  // The full Docker Hub repository name
+        CONTAINER_NAME = 'mypythonappContainer'
     }
     
     stages {
@@ -32,13 +33,14 @@ pipeline {
                 }
             }
         }
+        
         stage('Docker Run') {
             steps {
                 script {
                     def dockerImage = docker.image("${DOCKER_HUB_REPO}:${BUILD_NUMBER}")
-                    sh 'docker stop $mypythonappContainer || true'
-                    sh 'docker rm $mypythonappContainer || tru
-                    dockerImage.run("-p 81:80 --rm --name mypythonappContainer")
+                    sh "docker stop ${CONTAINER_NAME} || true"
+                    sh "docker rm ${CONTAINER_NAME} || true"
+                    dockerImage.run("-p 81:80 --rm --name ${CONTAINER_NAME}")
                 }
             }
         }
