@@ -41,7 +41,7 @@ pipeline {
                     sh "docker rm ${CONTAINER_NAME} || true"
                     
                     //def dockerImage = docker.image("${DOCKER_HUB_REPO}:${BUILD_NUMBER}")
-                    sh "docker container run -itd --name${CONTAINER_NAME} -p 81:80 ${DOCKER_HUB_REPO}:${BUILD_NUMBER}"
+                    sh "docker container run -itd --name ${CONTAINER_NAME} -p 81:80 ${DOCKER_HUB_REPO}:${BUILD_NUMBER}"
                 }
             }
         }
